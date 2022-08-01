@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-//npm i uuid
+
 const connection = require('../database/connection');
 
 module.exports = {
@@ -41,7 +41,7 @@ module.exports = {
 
             const { id } = request.params;
             const { name, email, whatsapp, city, uf } = request.body;
-            //console.log({ id, name, email, whatsapp, city, uf });
+
             const newregister = {
                 name,
                 email,
@@ -61,16 +61,6 @@ module.exports = {
         } catch (error) {
             return response.status(400).json({ message: error.message });
         }
-        /*const { id } = request.params;
-        const { name, email, whatsapp, city, uf } = request.body;
-        await connection('registration')
-        .update('registration')
-        .where('id',id)
-        .select('registration')
-        .first();*/
-
-
-        //await connection('registration').where('id', id).update();
     },
 
     async delete(request, response) {
@@ -83,7 +73,7 @@ module.exports = {
                 .first();
 
             const user = await connection('registration').where('id', id).delete();
-            //console.log(user);
+
             if (!user) {
                 return response.status(404).json({ message: 'Usuario não localizado' });
             } else {
