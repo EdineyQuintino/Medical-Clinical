@@ -1,2 +1,2 @@
 # platform-company
-API REST/RESTful Utilizando nodejs | PostgresSQL
+API REST/RESTful Utilizando nodejs | Express | PostgresSQL
