@@ -4,18 +4,18 @@ module.exports = {
     async index(request, response) {
         try {
             const { id } = request.params;
-            const registration = await connection('registration')
+            const patient = await connection('patient')
                 .where('id', id)
-                .select('registration')
+                .select('patient')
                 .first();
 
-            if (!registration) {
+            if (!patient) {
 
                 return response.status(400).json({ message: error.message });
 
             } else {
 
-                return response.status(200).json(registration);
+                return response.status(200).json(patient);
 
             }
 

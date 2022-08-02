@@ -1,15 +1,16 @@
-// Update with your config settings.
-
+require('dotenv').config()
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
+
+const { CLIENT_DB, NAME_DB, USER_DB, PASS_DB } = process.env
 module.exports = {
   
-    client: process.env.CLIENT_DB,
+    client: CLIENT_DB,
     connection: {
-      database: process.env.NAME_DB ,
-      user:     process.env.USER_DB,
-      password: process.env.PASS_DB
+      database: NAME_DB ,
+      user:     USER_DB,
+      password: PASS_DB
     },
     pool: {
       min: 2,
@@ -18,6 +19,4 @@ module.exports = {
     migrations: {
       directory: './src/database/migrations'
     }
-  
-
 };

@@ -5,9 +5,9 @@ const connection = require('../database/connection');
 module.exports = {
     async index(request, response) {
         try {
-            const registration = await connection('registration').select('*');
+            const patient = await connection('patient').select('*');
 
-            return response.status(200).json(registration)
+            return response.status(200).json(patient)
         } catch (error) {
             return response.status(400).json({ message: error.message });
         }
@@ -16,17 +16,23 @@ module.exports = {
 
     async create(request, response) {
         try {
-            const { name, email, whatsapp, city, uf } = request.body;
+            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, cep, uf } = request.body;
 
             const id = crypto.randomBytes(4).toString('HEX');
 
-            await connection('registration').insert({
+            await connection('patient').insert({
                 id,
                 name,
-                email,
-                whatsapp,
+                birthdate,
+                cpf,
+                number,
+                agreementnumber,
+                road,
+                housenumber,
+                district,
                 city,
-                uf,
+                cep,
+                uf
             })
 
             return response.status(201).json({ id });
@@ -40,18 +46,23 @@ module.exports = {
         try {
 
             const { id } = request.params;
-            const { name, email, whatsapp, city, uf } = request.body;
+            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, uf } = request.body;
 
-            const newregister = {
+            const newRegister = {
                 name,
-                email,
-                whatsapp,
+                birthdate,
+                cpf,
+                number,
+                agreementnumber,
+                road,
+                housenumber,
+                district,
                 city,
-                uf,
+                uf
             }
 
-            const newuser = await connection('registration').where('id', id).update(newregister);
-            if (!newuser) {
+            const newUser = await connection('patient').where('id', id).update(newRegister);
+            if (!newUser) {
                 return response.status(400).json({ message: error.message });
             } else {
                 return response.status(200).json({ message: 'sucesso' })
@@ -67,12 +78,12 @@ module.exports = {
         try {
             const { id } = request.params;
 
-            await connection('registration')
+            await connection('patient')
                 .where('id', id)
-                .select('registration')
+                .select('patient')
                 .first();
 
-            const user = await connection('registration').where('id', id).delete();
+            const user = await connection('patient').where('id', id).delete();
 
             if (!user) {
                 return response.status(404).json({ message: 'Usuario não localizado' });
