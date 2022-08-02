@@ -2,13 +2,11 @@ const express = require('express');
 
 const FunctionariController = require('../controllers/FunctionariController');
 
-const ListfunctionariidController = require('../controllers/ListfunctionariidController');
-
 const routes = express.Router();
 
 routes.get('/functionari', FunctionariController.index);
 
-routes.get('/functionari/:id', ListfunctionariidController.index);
+routes.get('/functionari/:id', FunctionariController.filter);
 
 routes.post('/functionari', FunctionariController.create);
 

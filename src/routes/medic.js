@@ -1,14 +1,12 @@
 const express = require('express');
 
-const ListmedicidController = require('../controllers/ListmedicidController');
-
 const MedicController = require('../controllers/MedicController');
 
 const routes = express.Router();
 
 routes.get('/medic', MedicController.index);
 
-routes.get('/medic/:id', ListmedicidController.index);
+routes.get('/medic/:id', MedicController.filter);
 
 routes.post('/medic', MedicController.create);
 
