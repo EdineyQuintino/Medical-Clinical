@@ -6,7 +6,7 @@ const patientRoutes = require('./routes/patient');
 const medicRoutes = require('./routes/medic');
 
 const app = express();
-
+      
 const PORT = process.env.PORT || 3334;
 app.use(express.json());
 
