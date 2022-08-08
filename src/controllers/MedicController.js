@@ -3,25 +3,22 @@ const axios = require('axios');
 
 const connection = require('../database/connection');
 
-const { URL_VIA_CEP } = process.env
-
+const { URL_VIA_CEP } = process.env;
 
 module.exports = {
     async index(request, response) {
         try {
             const medic = await connection('medic').select('*');
-
-            return response.status(200).json(medic)
+            
+            return response.status(200).json(medic);
         } catch (error) {
             return response.status(400).json({ message: error.message });
-        }
-
+        };
     },
 
     async create(request, response) {
         try {
             const { name, birthdate, cpf, number, crm, specialist, road, housenumber, district, cep, city, uf } = request.body;
-
             const id = crypto.randomBytes(4).toString('HEX');
 
             await connection('medic').insert({
@@ -38,13 +35,11 @@ module.exports = {
                 city,
                 cep,
                 uf
-            })
-
+            });
             return response.status(201).json({ id });
-
         } catch (error) {
             return response.status(400).json({ message: error.message });
-        }
+        };
     },
 
     async filter(request, response) {
@@ -56,25 +51,18 @@ module.exports = {
                 .first();
 
             if (!medic) {
-
                 return response.status(400).json({ message: error.message });
-
             } else {
-
                 return response.status(200).json(medic);
-
-            }
+            };
 
         } catch (error) {
-
             return response.status(400).json({ message: error.message });
-
-        }
+        };
     },
 
     async patch(request, response) {
         try {
-
             const { id } = request.params;
             const { name, birthdate, cpf, number, crm, specialist, cep, road, housenumber, district, city, uf } = request.body;
 
@@ -91,19 +79,18 @@ module.exports = {
                 city,
                 cep,
                 uf
-            }
+            };
 
             const newUser = await connection('medic').where('id', id).update(newRegister);
             if (!newUser) {
                 return response.status(400).json({ message: error.message });
             } else {
-                return response.status(200).json({ message: 'sucesso' })
-            }
-
+                return response.status(200).json({ message: 'sucesso' });
+            };
 
         } catch (error) {
             return response.status(400).json({ message: error.message });
-        }
+        };
     },
 
     async delete(request, response) {
@@ -121,13 +108,11 @@ module.exports = {
                 return response.status(404).json({ message: 'Usuario não localizado' });
             } else {
                 return response.status(204).json({ message: 'Exclusão Realizada' });
-            }
+            };
 
         } catch (error) {
             console.log(error);
             return response.status(400).json({ message: error.message });
-        }
-
+        };
     }
-
 };

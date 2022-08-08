@@ -18,7 +18,6 @@
         table.string('uf', 2).notNullable();
     });
 };
-
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
