@@ -16,7 +16,6 @@
         table.string('city').notNullable();
         table.string('cep').notNullable();
         table.string('uf', 2).notNullable();
-
     });
 };
 
@@ -27,3 +26,4 @@
 exports.down = function (knex) {
     return knex.schema.dropTable('patient');
 };
+

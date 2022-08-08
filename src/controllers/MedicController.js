@@ -1,6 +1,10 @@
 const crypto = require('crypto');
+const axios = require('axios');
 
 const connection = require('../database/connection');
+
+const { URL_VIA_CEP } = process.env
+
 
 module.exports = {
     async index(request, response) {

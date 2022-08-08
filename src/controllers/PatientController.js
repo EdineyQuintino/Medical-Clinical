@@ -1,6 +1,10 @@
 const crypto = require('crypto');
+const axios = require('axios');
 
 const connection = require('../database/connection');
+
+const { URL_VIA_CEP } = process.env
+
 
 module.exports = {
     async index(request, response) {
@@ -16,13 +20,12 @@ module.exports = {
 
     async create(request, response) {
         try {
-            
+
             const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, cep, uf } = request.body;
 
-            const id = crypto.randomBytes(4).toString('HEX');
 
-            await connection('patient').insert({
-                id,
+            const patientInfo = {
+                id: crypto.randomBytes(4).toString('HEX'),
                 name,
                 birthdate,
                 cpf,
@@ -34,9 +37,19 @@ module.exports = {
                 city,
                 cep,
                 uf
-            })
+            }
 
-            return response.status(201).json({ id });
+            if (!road || !city || !uf) {
+                const responseViacep = await axios.get(`${URL_VIA_CEP}${cep}/json/`);
+
+                patientInfo.road = responseViacep.data.logradouro
+                patientInfo.district = responseViacep.data.bairro
+                patientInfo.city = responseViacep.data.localidade
+                patientInfo.uf = responseViacep.data.uf
+            }
+
+            await connection('patient').insert(patientInfo)
+            return response.status(201).json({ patientInfo });
 
         } catch (error) {
             return response.status(400).json({ message: error.message });
@@ -48,23 +61,16 @@ module.exports = {
             const { id } = request.params;
             const patient = await connection('patient')
                 .where('id', id)
-                .select('patient')
                 .first();
 
             if (!patient) {
-
                 return response.status(400).json({ message: error.message });
-
             } else {
-
                 return response.status(200).json(patient);
-
             }
 
         } catch (error) {
-
             return response.status(400).json({ message: error.message });
-
         }
     },
 
