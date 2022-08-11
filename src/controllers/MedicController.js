@@ -49,7 +49,6 @@ module.exports = {
         try {
             const { id } = request.params;
             const medic = await connection('medic')
-
             .innerJoin('patient as p','medic.id','p.medic_id')
             .where( 'medic.id','=', id )
             .select('medic.id as Identificador','medic.name','p.name as pacientes');
@@ -59,7 +58,6 @@ module.exports = {
             } else {
                 return response.status(200).json(medic);
             };
-
         } catch (error) {
             return response.status(400).json({ message: error.message });
         };
