@@ -16,6 +16,12 @@
         table.string('city').notNullable();
         table.string('cep').notNullable();
         table.string('uf', 2).notNullable();
+        table.string('medic_id').unsigned();
+        table.foreign('medic_id')
+        .references('medic.id')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
+
     });
 };
 /**

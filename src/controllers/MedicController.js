@@ -3,13 +3,16 @@ const axios = require('axios');
 
 const connection = require('../database/connection');
 
+const PatientController = require('../controllers/PatientController');
+const { query } = require('express');
+
 const { URL_VIA_CEP } = process.env;
 
 module.exports = {
     async index(request, response) {
         try {
             const medic = await connection('medic').select('*');
-            
+
             return response.status(200).json(medic);
         } catch (error) {
             return response.status(400).json({ message: error.message });
@@ -46,10 +49,11 @@ module.exports = {
         try {
             const { id } = request.params;
             const medic = await connection('medic')
-                .where('id', id)
-                .select('medic')
-                .first();
 
+            .innerJoin('patient as p','medic.id','p.medic_id')
+            .where( 'medic.id','=', id )
+            .select('medic.id as Identificador','medic.name','p.name as pacientes');
+            
             if (!medic) {
                 return response.status(400).json({ message: error.message });
             } else {

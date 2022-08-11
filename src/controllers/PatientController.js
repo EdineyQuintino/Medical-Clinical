@@ -18,7 +18,7 @@ module.exports = {
 
     async create(request, response) {
         try {
-            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, cep, uf } = request.body;
+            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, cep, uf, medic_id } = request.body;
 
             const patientInfo = {
                 id: crypto.randomBytes(4).toString('HEX'),
@@ -32,7 +32,8 @@ module.exports = {
                 district,
                 city,
                 cep,
-                uf
+                uf,
+                medic_id
             };
 
             if (!road || !city || !uf) {
@@ -58,7 +59,6 @@ module.exports = {
             const patient = await connection('patient')
                 .where('id', id)
                 .first();
-
             if (!patient) {
                 return response.status(400).json({ message: error.message });
             } else {
@@ -74,7 +74,7 @@ module.exports = {
         try {
 
             const { id } = request.params;
-            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, uf } = request.body;
+            const { name, birthdate, cpf, number, agreementnumber, road, housenumber, district, city, uf, medic_id } = request.body;
 
             const newRegister = {
                 name,
@@ -86,7 +86,8 @@ module.exports = {
                 housenumber,
                 district,
                 city,
-                uf
+                uf,
+                medic_id
             };
 
             const newUser = await connection('patient').where('id', id).update(newRegister);
