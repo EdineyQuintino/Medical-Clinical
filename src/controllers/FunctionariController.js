@@ -1,11 +1,15 @@
 const crypto = require('crypto');
+const axios = require('axios');
 
 const connection = require('../database/connection');
+
+const { URL_VIA_CEP } = process.env;
 
 module.exports = {
     async index(request, response) {
         try {
             const functionari = await connection('functionari').select('*');
+
             return response.status(200).json(functionari);
         } catch (error) {
             return response.status(400).json({ message: error.message });
@@ -15,10 +19,9 @@ module.exports = {
     async create(request, response) {
         try {
             const { name, birthdate, cpf, number, office, road, housenumber, district, city, cep, uf } = request.body;
-            const id = crypto.randomBytes(4).toString('HEX');
 
-            await connection('functionari').insert({
-                id,
+            const functionariInfo = {
+                id: crypto.randomBytes(4).toString('HEX'),
                 name,
                 birthdate,
                 cpf,
@@ -30,9 +33,19 @@ module.exports = {
                 city,
                 cep,
                 uf
-            });
+            };
 
-            return response.status(201).json({ id });
+            if (!road || !city || !uf) {
+                const responseViacep = await axios.get(`${URL_VIA_CEP}${cep}/json/`);
+
+                functionariInfo.road = responseViacep.data.logradouro;
+                functionariInfo.district = responseViacep.data.bairro;
+                functionariInfo.city = responseViacep.data.localidade;
+                functionariInfo.uf = responseViacep.data.uf;
+            };
+            
+            await connection('functionari').insert(functionariInfo);
+            return response.status(201).json({ functionariInfo });
 
         } catch (error) {
             return response.status(400).json({ message: error.message });

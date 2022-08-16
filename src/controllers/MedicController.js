@@ -20,7 +20,6 @@ module.exports = {
         try {
             const { name, birthdate, cpf, number, crm, specialist, road, housenumber, district, cep, city, uf } = request.body;
 
-            //await connection('medic').insert({
             const medicInfo = {    
                 id: crypto.randomBytes(4).toString('HEX'),
                 name,
