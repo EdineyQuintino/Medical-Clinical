@@ -1,15 +1,12 @@
 const crypto = require('crypto');
-const axios = require('axios');
+const axios= require('axios');
 
 const connection = require('../database/connection');
-
-const PatientController = require('../controllers/PatientController');
-const { query } = require('express');
 
 const { URL_VIA_CEP } = process.env;
 
 module.exports = {
-    async index(request, response) {
+    async index(request,response) {
         try {
             const medic = await connection('medic').select('*');
 
@@ -22,10 +19,10 @@ module.exports = {
     async create(request, response) {
         try {
             const { name, birthdate, cpf, number, crm, specialist, road, housenumber, district, cep, city, uf } = request.body;
-            const id = crypto.randomBytes(4).toString('HEX');
 
-            await connection('medic').insert({
-                id,
+            //await connection('medic').insert({
+            const medicInfo = {    
+                id: crypto.randomBytes(4).toString('HEX'),
                 name,
                 birthdate,
                 cpf,
@@ -38,8 +35,20 @@ module.exports = {
                 city,
                 cep,
                 uf
-            });
-            return response.status(201).json({ id });
+            };
+
+            if (!road || !city || !uf) {
+                const responseViacep = await axios.get(`${URL_VIA_CEP}${cep}/json/`);
+
+                medicInfo.road = responseViacep.data.logradouro;
+                medicInfo.district = responseViacep.data.bairro;
+                medicInfo.city = responseViacep.data.localidade;
+                medicInfo.uf = responseViacep.data.uf;
+            };
+
+            await connection('medic').insert(medicInfo);
+            return response.status(201).json({ medicInfo });
+            
         } catch (error) {
             return response.status(400).json({ message: error.message });
         };

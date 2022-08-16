@@ -6,7 +6,7 @@ const connection = require('../database/connection');
 const { URL_VIA_CEP } = process.env;
 
 module.exports = {
-    async index(request, response) {
+    async index(request,response) {
         try {
             const patient = await connection('patient').select('*');
 
@@ -59,6 +59,7 @@ module.exports = {
             const patient = await connection('patient')
                 .where('id', id)
                 .first();
+
             if (!patient) {
                 return response.status(400).json({ message: error.message });
             } else {
