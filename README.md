@@ -1,4 +1,4 @@
-# platform-company
+# Medical-Clinical
 API REST/RESTful Utilizando nodejs | Express | PostgresSQL
 
 A criação dessa API e visando colocar em pratica todo conhecimento que venho adquirindo com bastante estudo e dedicação.
